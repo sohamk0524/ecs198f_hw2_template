@@ -1,17 +1,16 @@
-FROM debian:bookworm
+FROM --platform=linux/amd64/v8 debian:bookworm
 
-RUN apt-get update && apt-get install -y \
-    wget \
-    bzip2 \
-	git \
-    bash && \
-    rm -rf /var/lib/apt/lists/*  # Clean up apt cache to reduce image size
+RUN apt-get update && apt-get install -y wget git bash
 
-RUN mkdir -p /miniconda3 && \
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh -O /miniconda3/miniconda.sh && \
-    bash /miniconda3/miniconda.sh -b -u -p /miniconda3 && \
-    rm /miniconda3/miniconda.sh
+# Install Miniconda
+RUN mkdir -p ~/miniconda3
 
-ENV PATH="/miniconda3/bin:${PATH}"
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+    
+RUN bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+    
+RUN rm ~/miniconda3/miniconda.sh
 
-RUN git clone https://github.com/dbarnett/python-helloworld.git
+RUN git clone https://github.com/dbarnett/python-helloworld
+
+CMD ["/bin/bash"]
